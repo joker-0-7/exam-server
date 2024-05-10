@@ -2,7 +2,7 @@ const subjectModel = require("../models/subject.model");
 const userSchema = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const System = require("../models/system.model");
+const sourcesModel = require("../models/sources.model");
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -21,7 +21,7 @@ const login = async (req, res) => {
         .status(401)
         .json({ msg: "Unauthorized - Admin only resource" });
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "1h",
+      expiresIn: "2h",
     });
     user.password = undefined;
     if (user.active == false)
@@ -36,7 +36,6 @@ const login = async (req, res) => {
       .json({ msg: "Faild To Login, Please Try Again Later." });
   }
 };
-
 const addSubject = async (req, res) => {
   const data = req.body.subject;
   if (!data || !data.name)
@@ -82,45 +81,46 @@ const deleteSubject = async (req, res) => {
   return res.status(200).json({ msg: "Done Deleted" });
 };
 const addSource = async (req, res) => {
-  const data = req.body.subject;
+  const data = req.body.source;
+  console.log(data);
   if (!data || !data.name)
     return res.status(404).json({ msg: "You Should Add Subject Name" });
   try {
-    const subject = await subjectModel(data);
-    subject.save();
+    const source = await sourcesModel(data);
+    source.save();
     return res.status(201).json({ msg: "Done Created" });
   } catch (err) {
     return res
       .status(404)
-      .json({ msg: "Faild To Add Subject, Please Try Again Later" });
+      .json({ msg: "Faild To Add Source, Please Try Again Later" });
   }
 };
 const getSource = async (req, res) => {
   const id = req.params.id;
   try {
-    const subject = await subjectModel.findById(id);
-    return res.status(201).json(subject);
+    const source = await sourcesModel.findById(id);
+    return res.status(201).json(source);
   } catch (err) {
     return res
       .status(404)
-      .json({ msg: "Faild To Add Subject, Please Try Again Later" });
+      .json({ msg: "Faild To Add Source, Please Try Again Later" });
   }
 };
 const updateSource = async (req, res) => {
   const id = req.params.id;
   const data = req.body.subject;
   try {
-    const subject = await subjectModel.findByIdAndUpdate(id, data);
-    return res.status(201).json(subject);
+    const source = await sourcesModel.findByIdAndUpdate(id, data);
+    return res.status(201).json(source);
   } catch (err) {
     return res
       .status(404)
-      .json({ msg: "Faild To Add Subject, Please Try Again Later" });
+      .json({ msg: "Faild To Add Source, Please Try Again Later" });
   }
 };
 const deleteSource = async (req, res) => {
   const id = req.params.id;
-  const data = await subjectModel.findByIdAndDelete(id);
+  const data = await sourcesModel.findByIdAndDelete(id);
   if (!data) return res.status(404).json({ msg: "No Subject Found" });
 
   return res.status(200).json({ msg: "Done Deleted" });

@@ -6,6 +6,7 @@ var logger = require("morgan");
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var adminsRouter = require("./routes/admin");
+var quizRouter = require("./routes/quiz");
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
@@ -19,14 +20,18 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 mongoose
-  .connect("mongodb://localhost:27017/test-app")
+  .connect(process.env.DB_URL)
   .then(() => console.log("Done Connection To Data Base"))
   .catch((error) => console.log("Faild Connection " + error));
 
 app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
+app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminsRouter);
-
+app.use(
+  "/public/images",
+  express.static(path.join(__dirname, "public/images"))
+);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
   next(createError(404));

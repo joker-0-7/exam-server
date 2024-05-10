@@ -7,10 +7,15 @@ let userSchema = new Schema(
     lastName: { type: String, required: true },
     password: { type: String, required: true },
     email: { type: String, required: true },
-    country: { type: String, required: true },
+    country: { type: String },
     active: { type: Boolean, default: false },
     avatar: { type: String },
     isAdmin: { type: Boolean, default: null },
+    activate: { type: Date, default: null },
+    totalExam: { type: Number, default: 0 },
+    compeleteExams: { type: Number, default: 0 },
+    faildExams: { type: Number, default: 0 },
+    quizzes: [{ type: Schema.Types.ObjectId, ref: "Quiz" }],
   },
   { timestamps: true }
 );

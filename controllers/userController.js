@@ -52,9 +52,10 @@ const register = async (req, res) => {
       const savedUser = await newUser.save();
       return res.status(201).json({
         msg: "Registration process is done , Contact Admin To Activate Your Account",
+        savedUser,
       });
     } catch (error) {
-      console.log(err);
+      console.log(error);
       return res
         .status(500)
         .json({ mag: "Faild To Register, Please Try Again Later." });
@@ -84,7 +85,7 @@ const changeStatus = async (req, res) => {
   try {
     const user = await userSchema.findByIdAndUpdate(
       id,
-      { active: !active },
+      { active: !active, activate: Date.now() },
       { new: true }
     );
     return res.status(200).json({ msg: "success" });
