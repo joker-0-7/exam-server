@@ -1,4 +1,5 @@
 const examModel = require("../models/exam.model");
+const PastPapers = require("../models/pastPapres.model");
 const QuizUsers = require("../models/quiz.model");
 
 const getQuizzes = async (req, res) => {
@@ -16,7 +17,6 @@ const getQuizzes = async (req, res) => {
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
-  console.log(data);
 
   try {
     const quiz = await examModel.create(data);
@@ -95,7 +95,6 @@ const getQuizUsers = async (req, res) => {
 const addQuizToUser = async (req, res) => {
   const data = req.body.data;
   const id = req.current.userId;
-  console.log(data);
   try {
     const existQuiz = await QuizUsers.exists({ studentId: id });
     if (existQuiz) {
@@ -118,11 +117,67 @@ const addQuizToUser = async (req, res) => {
     });
   }
 };
-
+const getQuizzesUser = async (req, res) => {
+  const data = req.body;
+  try {
+    const quiz = await QuizUsers.find({
+      studentId: req.current.userId,
+    }).populate({
+      path: "question.questionId",
+      select: "question",
+    });
+    return res.status(201).json(quiz);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+const addPastPapers = async (req, res) => {
+  const data = req.body.data;
+  try {
+    const pastPaper = await PastPapers.create(data);
+    return res.status(201).json({ msg: "Done Created Exam", pastPaper });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+const getPastPapers = async (req, res) => {
+  try {
+    const pastPapera = await PastPapers.find({}, { data: 0 });
+    return res.status(200).json(pastPapera);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+const getPastPaper = async (req, res) => {
+  const id = req.params.id;
+  console.log(id);
+  try {
+    const pastPaper = await PastPapers.findById(id);
+    return res.status(200).json(pastPaper);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
 module.exports = {
   getQuizzes,
   addQuiz,
   addQuizUsers,
   getQuizUsers,
   addQuizToUser,
+  getQuizzesUser,
+  addPastPapers,
+  getPastPapers,
+  getPastPaper,
 };

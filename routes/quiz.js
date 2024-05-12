@@ -22,5 +22,9 @@ router.post("/", upload.single("img"), quizzesControll.addQuiz);
 router.post("/user", verifyToken, quizzesControll.addQuizUsers);
 router.patch("/user", verifyToken, quizzesControll.addQuizToUser);
 router.get("/user", verifyToken, quizzesControll.getQuizUsers);
+router.get("/quizzes", verifyToken, quizzesControll.getQuizzesUser);
+router.post("/past-papers", verifyToken, quizzesControll.addPastPapers);
+router.get("/past-papers", verifyToken, quizzesControll.getPastPapers);
+router.get("/past-paper/:id", verifyToken, quizzesControll.getPastPaper);
 
 module.exports = router;
