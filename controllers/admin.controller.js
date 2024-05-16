@@ -3,6 +3,8 @@ const userSchema = require("../models/user.model");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const sourcesModel = require("../models/sources.model");
+const userModel = require("../models/user.model");
+const QuizUsers = require("../models/quiz.model");
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -125,7 +127,24 @@ const deleteSource = async (req, res) => {
 
   return res.status(200).json({ msg: "Done Deleted" });
 };
-
+const deleteUser = async (req, res) => {
+  const id = req.params.id;
+  const data = await userModel.findByIdAndDelete(id);
+  const quizUser = await QuizUsers.findAndDelete({ studentId: id });
+  if (!data) return res.status(404).json({ msg: "No User Found" });
+  return res.status(200).json({ msg: "Done Deleted" });
+};
+const endDateUser = async (req, res) => {
+  const date = req.body.date;
+  const id = req.params.id;
+  try {
+    const user = await userModel.findByIdAndUpdate(id, { activate: date });
+    return res.status(200).json({ msg: "Done Update User", user });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ msg: "Internal server error" });
+  }
+};
 const current = (req, res) => {
   return res.status(200).json({ msg: "current" });
 };
@@ -140,4 +159,6 @@ module.exports = {
   getSource,
   updateSource,
   deleteSource,
+  deleteUser,
+  endDateUser,
 };

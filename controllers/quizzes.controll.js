@@ -17,7 +17,7 @@ const getQuizzes = async (req, res) => {
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
-
+  console.log(data);
   try {
     const quiz = await examModel.create(data);
     return res.status(201).json({ msg: "Done Create Exam" });

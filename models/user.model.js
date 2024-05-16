@@ -11,7 +11,7 @@ let userSchema = new Schema(
     active: { type: Boolean, default: false },
     avatar: { type: String },
     isAdmin: { type: Boolean, default: null },
-    activate: { type: Date, default: null },
+    activate: { type: Number, default: null },
     totalExam: { type: Number, default: 0 },
     compeleteExams: { type: Number, default: 0 },
     faildExams: { type: Number, default: 0 },

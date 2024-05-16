@@ -67,5 +67,19 @@ router.delete(
   isTokenExpired,
   adminController.deleteSource
 );
+router.delete(
+  "/user/:id",
+  verifyToken,
+  isAdmin,
+  isTokenExpired,
+  adminController.deleteUser
+);
+router.patch(
+  "/user/:id",
+  verifyToken,
+  isAdmin,
+  isTokenExpired,
+  adminController.endDateUser
+);
 
 module.exports = router;

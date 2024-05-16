@@ -50,10 +50,27 @@ function ownsResource(req, res, next) {
   }
   next();
 }
+async function isValidDate(req, res, next) {
+  // const id = req.current.userId;
+  // const user = await userModel.findById(id, { activate: 1, _id: 0 });
+  // const isTrue = user.activate < Date.now();
+
+  // console.log(Date.now(user.activate));
+  // console.log(user.activate);
+  // console.log(Date.now());
+
+  // console.log(isTrue);
+  // if (isTrue) return next();
+  // const userUpdate = await userModel.findByIdAndUpdate(id, { active: false });
+  // return res.status(401).json({ msg: "Unauthorized - Admin only resource" });
+  next();
+}
+
 module.exports = {
   isValidUser,
   isTokenExpired,
   isAdmin,
   ownsResource,
   verifyToken,
+  isValidDate,
 };
