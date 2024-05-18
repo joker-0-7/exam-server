@@ -19,6 +19,9 @@ const upload = multer({ storage: storage });
 
 router.get("/", quizzesControll.getQuizzes);
 router.post("/", upload.single("img"), quizzesControll.addQuiz);
+router.get("/:id", quizzesControll.getQuestion);
+router.patch("/:id", upload.single("img"), quizzesControll.updateQuestion);
+router.delete("/:id", quizzesControll.deleteQuestion);
 router.post("/user", verifyToken, quizzesControll.addQuizUsers);
 router.patch("/user", verifyToken, quizzesControll.addQuizToUser);
 router.get("/user", verifyToken, quizzesControll.getQuizUsers);

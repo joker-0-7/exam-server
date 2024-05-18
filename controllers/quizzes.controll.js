@@ -17,7 +17,6 @@ const getQuizzes = async (req, res) => {
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
-  console.log(data);
   try {
     const quiz = await examModel.create(data);
     return res.status(201).json({ msg: "Done Create Exam" });
@@ -26,6 +25,37 @@ const addQuiz = async (req, res) => {
     return res.status(500).json({
       message: "Internal server error",
     });
+  }
+};
+const getQuestion = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const question = await examModel.findById(id);
+    return res.status(201).json(question);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+const deleteQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+    await examModel.findByIdAndDelete(id);
+    return res.status(200).json({ msg: "Done Delete Question" });
+  } catch (err) {
+    console.log(err);
+  }
+};
+const updateQuestion = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    await examModel.findByIdAndUpdate(id, data);
+    return res.status(200).json({ msg: "Done Update Question" });
+  } catch (err) {
+    console.log(err);
   }
 };
 const addQuizUsers = async (req, res) => {
@@ -134,6 +164,7 @@ const getQuizzesUser = async (req, res) => {
     });
   }
 };
+
 const addPastPapers = async (req, res) => {
   const data = req.body.data;
   try {
@@ -159,7 +190,6 @@ const getPastPapers = async (req, res) => {
 };
 const getPastPaper = async (req, res) => {
   const id = req.params.id;
-  console.log(id);
   try {
     const pastPaper = await PastPapers.findById(id);
     return res.status(200).json(pastPaper);
@@ -180,4 +210,7 @@ module.exports = {
   addPastPapers,
   getPastPapers,
   getPastPaper,
+  deleteQuestion,
+  getQuestion,
+  updateQuestion,
 };
