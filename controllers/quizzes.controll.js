@@ -140,7 +140,6 @@ const addQuizUsers = async (req, res) => {
   }
 };
 const getQuizUsers = async (req, res) => {
-  const data = req.body;
   try {
     const quiz = await QuizUsers.find().populate({
       path: "studentId",
@@ -180,13 +179,13 @@ const addQuizToUser = async (req, res) => {
   }
 };
 const getQuizzesUser = async (req, res) => {
-  const data = req.body;
+  console.log("getQuizzesUser");
   try {
     const quiz = await QuizUsers.find({
       studentId: req.current.userId,
     }).populate({
       path: "question.questionId",
-      select: "question",
+      select: "question answers correct",
     });
     return res.status(201).json(quiz);
   } catch (error) {
