@@ -17,7 +17,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-router.get("/", quizzesControll.getQuizzes);
+router.get("/current/:current", quizzesControll.getQuizzes);
 router.post("/", upload.single("img"), quizzesControll.addQuiz);
 router.get("/:id", quizzesControll.getQuestion);
 router.patch("/:id", upload.single("img"), quizzesControll.updateQuestion);
@@ -29,5 +29,8 @@ router.get("/quizzes", verifyToken, quizzesControll.getQuizzesUser);
 router.post("/past-papers", verifyToken, quizzesControll.addPastPapers);
 router.get("/past-papers", verifyToken, quizzesControll.getPastPapers);
 router.get("/past-paper/:id", verifyToken, quizzesControll.getPastPaper);
-
+router.get("/countet/quiz", quizzesControll.getQuestionsCountt);
+// router.get("/countet/", (req, res) => {
+//   console.log("aaa");
+// });
 module.exports = router;

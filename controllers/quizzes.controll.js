@@ -3,8 +3,14 @@ const PastPapers = require("../models/pastPapres.model");
 const QuizUsers = require("../models/quiz.model");
 
 const getQuizzes = async (req, res) => {
+  const current = req.params.current || 1;
+  const perPage = 10;
   try {
-    const quizzes = await examModel.find();
+    const quizzes = await examModel
+      .find()
+      .skip((current - 1) * perPage)
+      .limit(perPage)
+      .lean();
     return res.status(200).json(quizzes);
   } catch (error) {
     console.log(error);
@@ -14,11 +20,37 @@ const getQuizzes = async (req, res) => {
   }
 };
 
+const getQuestionsCountt = async (req, res) => {
+  console.log("aaaa");
+  try {
+    const count = await examModel.countDocuments();
+    console.log("Total Questions Count:", count);
+    return res.status(200).json({ count });
+  } catch (error) {
+    console.error("Error fetching questions count:", error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
+  console.log(typeof data.answers);
+
+  const quiz = await examModel({
+    sources: JSON.parse(data.sources),
+    question: data.question,
+    answers: JSON.parse(data.answers),
+    correct: data.correct,
+    explanation: data.explanation,
+    subjects: JSON.parse(data.subjects),
+    image: data.image,
+  });
   try {
-    const quiz = await examModel.create(data);
+    quiz.save();
+    console.log(quiz);
     return res.status(201).json({ msg: "Done Create Exam" });
   } catch (error) {
     console.log(error);
@@ -213,4 +245,5 @@ module.exports = {
   deleteQuestion,
   getQuestion,
   updateQuestion,
+  getQuestionsCountt,
 };
