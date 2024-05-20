@@ -19,9 +19,7 @@ const getQuizzes = async (req, res) => {
     });
   }
 };
-
 const getQuestionsCountt = async (req, res) => {
-  console.log("aaaa");
   try {
     const count = await examModel.countDocuments();
     console.log("Total Questions Count:", count);
@@ -33,7 +31,6 @@ const getQuestionsCountt = async (req, res) => {
     });
   }
 };
-
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
@@ -160,7 +157,7 @@ const addQuizToUser = async (req, res) => {
     const existQuiz = await QuizUsers.exists({ studentId: id });
     if (existQuiz) {
       const questionsToAdd = Object.entries(data).map(
-        ([questionId, value]) => ({ questionId, value })
+        ([questionId, value, answerUser]) => ({ questionId, value, answerUser })
       );
       const quiz = await QuizUsers.findByIdAndUpdate(
         existQuiz._id,
@@ -179,7 +176,6 @@ const addQuizToUser = async (req, res) => {
   }
 };
 const getQuizzesUser = async (req, res) => {
-  console.log("getQuizzesUser");
   try {
     const quiz = await QuizUsers.find({
       studentId: req.current.userId,
