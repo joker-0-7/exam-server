@@ -35,5 +35,6 @@ router.put(
   isValidDate,
   userController.updatePassword
 );
+router.get("/current", verifyToken, userController.current);
 
 module.exports = router;

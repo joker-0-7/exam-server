@@ -12,12 +12,12 @@ const login = async (req, res) => {
   try {
     let user = await userSchema.findOne({ email });
     if (!user)
-      return res.status(401).json({ msg: "This User Is Not Registered" });
+      return res.status(404).json({ msg: "This User Is Not Registered" });
     const validPassword = await bcrypt.compare(password, user.password);
     if (!validPassword)
       return res.status(404).json({ msg: "Invalid Password" });
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
-      expiresIn: "2h",
+      expiresIn: "7d",
     });
     user.password = undefined;
     if (user.active == false)
@@ -116,6 +116,14 @@ const updatePassword = async (req, res) => {
     return res.status(400).json({ msg: "fiald" });
   }
 };
+const current = async (req, res) => {
+  try {
+    const user = await userSchema.findById(req.current.userId);
+    return res.status(200).json({ ok: true });
+  } catch (error) {
+    return res.status(400);
+  }
+};
 module.exports = {
   login,
   register,
@@ -124,4 +132,5 @@ module.exports = {
   changeStatus,
   getSources,
   updatePassword,
+  current,
 };
