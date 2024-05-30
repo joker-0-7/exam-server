@@ -1,5 +1,5 @@
 const examModel = require("../models/exam.model");
-const PastPapers = require("../models/pastPapres.model");
+const PastPapers = require("../models/pastPapers.model");
 const QuizUsers = require("../models/quiz.model");
 
 const getQuizzes = async (req, res) => {
@@ -19,7 +19,7 @@ const getQuizzes = async (req, res) => {
     });
   }
 };
-const getQuestionsCountt = async (req, res) => {
+const getQuestionsCount = async (req, res) => {
   try {
     const count = await examModel.countDocuments();
     console.log("Total Questions Count:", count);
@@ -81,7 +81,14 @@ const updateQuestion = async (req, res) => {
   try {
     const id = req.params.id;
     const data = req.body;
-    await examModel.findByIdAndUpdate(id, data);
+    await examModel.findByIdAndUpdate(id, {
+      sources: JSON.parse(data.sources),
+      question: data.question,
+      answers: JSON.parse(data.answers),
+      correct: data.correct,
+      explanation: data.explanation,
+      subjects: JSON.parse(data.subjects),
+    });
     return res.status(200).json({ msg: "Done Update Question" });
   } catch (err) {
     console.log(err);
@@ -94,11 +101,11 @@ const addQuizUsers = async (req, res) => {
   if (existQuiz) {
     let answeredQuestions = [];
     const id = existQuiz._id;
-    if (data.adv == false) {
+    if (!data.adv) {
       answeredQuestions = existQuiz.question.map((qId) => qId.questionId);
     }
     try {
-      const updata = await QuizUsers.findByIdAndUpdate(id, {
+      await QuizUsers.findByIdAndUpdate(id, {
         $push: { question: data.question },
         subjects: data.subjects,
         sources: data.sources,
@@ -115,7 +122,7 @@ const addQuizUsers = async (req, res) => {
         { $sample: { size: data.count || 100 } },
       ]);
 
-      return res.status(201).json({ msg: "Done Updated Docmintation", exam });
+      return res.status(201).json({ msg: "Done Updated Documentation", exam });
     } catch (error) {
       console.log(error);
     }
@@ -240,5 +247,5 @@ module.exports = {
   deleteQuestion,
   getQuestion,
   updateQuestion,
-  getQuestionsCountt,
+  getQuestionsCount,
 };

@@ -3,6 +3,7 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const subjectSchema = require("../models/subject.model");
 const sourceSchema = require("../models/sources.model");
+const QuizUsers = require("../models/quiz.model");
 const login = async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password)
@@ -124,6 +125,18 @@ const current = async (req, res) => {
     return res.status(400);
   }
 };
+const resetInformation = async (req, res) => {
+  const id = req.params.id;
+  try {
+    const question = await QuizUsers.findOne({ studentId: id });
+    if (question.length > 0)
+      return res.status(400).json({ msg: "You Not Have Questions" });
+    const delQuestions = await QuizUsers.findOneAndDelete({ studentId: id });
+    return res.status(200).json({ msg: "Your Information Was Reseted" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 module.exports = {
   login,
   register,
@@ -133,4 +146,5 @@ module.exports = {
   getSources,
   updatePassword,
   current,
+  resetInformation,
 };

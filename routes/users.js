@@ -6,6 +6,7 @@ const verifyUser = require("../middlewares/verifyUser");
 /* GET users listing. */
 router.post("/login", userController.login);
 router.post("/regester", userController.register);
+router.post("/reset-information/:id", userController.resetInformation);
 router.get("/", verifyToken, verifyUser, isValidDate, userController.getUsers);
 router.put(
   "/change-status/:id",
