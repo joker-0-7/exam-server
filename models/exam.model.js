@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const PastPapers = require("./pastPapers.model");
 var Schema = mongoose.Schema;
 
 var examSchema = new Schema({
@@ -7,6 +8,7 @@ var examSchema = new Schema({
   answers: { type: Array, required: true },
   question: { type: String, required: true },
   correct: { type: String, required: true },
+  PastPapers: { type: String, default: null },
   image: { type: String },
   explanation: { type: String },
 });

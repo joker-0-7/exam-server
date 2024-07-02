@@ -24,7 +24,7 @@ const verifyToken = (req, res, next) => {
     req.current = decoded;
     next();
   } catch (err) {
-    return res.status(401).json({ msg: "You Shoud Sign In" });
+    return res.status(401).json({ msg: "You Should Sign In" });
   }
 };
 /**
@@ -53,6 +53,7 @@ function ownsResource(req, res, next) {
 async function isValidDate(req, res, next) {
   // const id = req.current.userId;
   // const user = await userModel.findById(id, { activate: 1, _id: 0 });
+  // // if (!use.activate) return next()
   // const isTrue = user.activate < Date.now();
 
   // console.log(Date.now(user.activate));

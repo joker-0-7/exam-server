@@ -30,6 +30,11 @@ router.post("/user", verifyToken, quizzesController.addQuizUsers);
 router.patch("/user", verifyToken, quizzesController.addQuizToUser);
 router.get("/user", verifyToken, quizzesController.getQuizUsers);
 router.get("/quizzes", verifyToken, quizzesController.getQuizzesUser);
+router.get(
+  "/previous-questions",
+  verifyToken,
+  quizzesController.getPreviousQuestions
+);
 
 router.post("/past-papers", verifyToken, quizzesController.addPastPapers);
 router.get("/past-papers", verifyToken, quizzesController.getPastPapers);

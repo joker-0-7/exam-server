@@ -35,7 +35,6 @@ const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
   console.log(typeof data.answers);
-
   const quiz = await examModel({
     sources: JSON.parse(data.sources),
     question: data.question,
@@ -94,6 +93,7 @@ const updateQuestion = async (req, res) => {
     console.log(err);
   }
 };
+//! I Will Update It (Important) Because Docs Will Be Not Work
 const addQuizUsers = async (req, res) => {
   const data = req.body.data;
   const id = req.current.userId;
@@ -188,9 +188,97 @@ const getQuizzesUser = async (req, res) => {
       studentId: req.current.userId,
     }).populate({
       path: "question.questionId",
-      select: "question answers correct",
+      select: "question answers correct sources",
     });
     return res.status(201).json(quiz);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+    });
+  }
+};
+// const getQuizzesUser = async (req, res) => {
+//   try {
+//     const current = req.params.current || 1;
+//     const perPage = 10;
+//     const studentId = req.current.userId;
+
+//     const totalQuizzes = await QuizUsers.countDocuments({ studentId });
+
+//     const quizzes = await QuizUsers.find({ studentId })
+//       .limit(perPage)
+//       .skip((current - 1) * perPage)
+//       .populate({
+//         path: "question.questionId",
+//         select: "question answers correct sources",
+//       })
+//       .exec();
+
+//     const paginatedQuizzes = quizzes.map((quiz) => {
+//       const totalQuestions = quiz.question.length;
+//       const paginatedQuestions = quiz.question.slice(
+//         (current - 1) * perPage,
+//         current * perPage
+//       );
+//       return {
+//         ...quiz.toObject(),
+//         question: paginatedQuestions,
+//         totalQuestions,
+//         totalQuestionPages: Math.ceil(totalQuestions / perPage),
+//         currentQuestionPage: current,
+//       };
+//     });
+//     console.log(paginatedQuizzes);
+//     return res.status(201).json({
+//       quizzes: paginatedQuizzes,
+//       totalQuizzes,
+//       totalPages: Math.ceil(totalQuizzes / perPage),
+//       currentPage: current,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({
+//       message: "Internal server error",
+//     });
+//   }
+// };
+const getPreviousQuestions = async (req, res) => {
+  try {
+    const { page, limit, questionPage, questionLimit } = req.query;
+    const studentId = req.current.userId;
+    const totalQuizzes = await QuizUsers.countDocuments({ studentId });
+
+    const quizzes = await QuizUsers.find({ studentId })
+      .limit(limit * 1)
+      .skip((page - 1) * limit)
+      .populate({
+        path: "question.questionId",
+        select: "question answers correct sources",
+      })
+      .exec();
+
+    const paginatedQuizzes = quizzes.map((quiz) => {
+      const totalQuestions = quiz.question.length;
+      const paginatedQuestions = quiz.question.slice(
+        (questionPage - 1) * questionLimit,
+        questionPage * questionLimit
+      );
+      return {
+        ...quiz.toObject(),
+        question: paginatedQuestions,
+        totalQuestions,
+        totalQuestionPages: Math.ceil(totalQuestions / questionLimit),
+        currentQuestionPage: questionPage,
+      };
+    });
+
+    return res.status(201).json({
+      quizzes: paginatedQuizzes,
+      totalQuizzes,
+      totalPages: Math.ceil(totalQuizzes / limit),
+      currentPage: page,
+    });
   } catch (error) {
     console.log(error);
     return res.status(500).json({
@@ -248,4 +336,5 @@ module.exports = {
   getQuestion,
   updateQuestion,
   getQuestionsCount,
+  getPreviousQuestions,
 };

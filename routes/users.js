@@ -37,5 +37,6 @@ router.put(
   userController.updatePassword
 );
 router.get("/current", verifyToken, userController.current);
+router.post("/free-trail", userController.freeTrail);
 
 module.exports = router;

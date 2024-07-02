@@ -137,6 +137,19 @@ const resetInformation = async (req, res) => {
     console.log(error);
   }
 };
+const freeTrail = async (req, res) => {
+  const token = jwt.sign({ userId: Date.now() }, process.env.JWT_SECRET, {
+    expiresIn: "1d",
+  });
+  return res.status(201).json({
+    user: {
+      firstName: "Free",
+      lastName: "Trail",
+      email: "free@trail.com",
+    },
+    token,
+  });
+};
 module.exports = {
   login,
   register,
@@ -147,4 +160,5 @@ module.exports = {
   updatePassword,
   current,
   resetInformation,
+  freeTrail,
 };

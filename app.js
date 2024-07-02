@@ -1,17 +1,19 @@
-var createError = require("http-errors");
-var express = require("express");
-var path = require("path");
-var cookieParser = require("cookie-parser");
-var logger = require("morgan");
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var adminsRouter = require("./routes/admin");
-var quizRouter = require("./routes/quiz");
+let createError = require("http-errors");
+let express = require("express");
+let path = require("path");
+let cookieParser = require("cookie-parser");
+let logger = require("morgan");
+let usersRouter = require("./routes/users");
+let adminsRouter = require("./routes/admin");
+let quizRouter = require("./routes/quiz");
+const compression = require("compression");
+
 const cors = require("cors");
 const mongoose = require("mongoose");
 require("dotenv").config();
-var app = express();
+let app = express();
 app.use(cors());
+app.use(compression());
 
 app.use(logger("dev"));
 app.use(express.json());
@@ -24,7 +26,6 @@ mongoose
   .then(() => console.log("Done Connection To Data Base"))
   .catch((error) => console.log("Faild Connection " + error));
 
-app.use("/api/", indexRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/quiz", quizRouter);
 app.use("/api/admin", adminsRouter);
