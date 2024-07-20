@@ -34,6 +34,7 @@ const getQuestionsCount = async (req, res) => {
 const addQuiz = async (req, res) => {
   const data = req.body;
   data.image = req.uniqueSuffix || "";
+  console.log(data);
   const quiz = await examModel({
     sources: JSON.parse(data.sources),
     question: data.question,
@@ -46,6 +47,7 @@ const addQuiz = async (req, res) => {
   });
   try {
     quiz.save();
+    console.log(quiz);
     return res.status(201).json({ msg: "Done Create Exam" });
   } catch (error) {
     console.log(error);
@@ -115,7 +117,6 @@ const addQuizUsers = async (req, res) => {
           $match: {
             sources: { $in: data.sources },
             subjects: { $in: data.subjects },
-            pastPapers: { $in: data.pastPapers },
             _id: { $nin: answeredQuestions },
           },
         },
@@ -311,15 +312,17 @@ const getPastPapers = async (req, res) => {
   }
 };
 const getPastPaper = async (req, res) => {
-  const id = req.params.id;
+  const data = req.params.id;
+  console.log(data);
   try {
     const pastPaper = await examModel.aggregate([
       {
         $match: {
-          pastPapers: { $in: data.pastPapers },
+          pastPapers: data,
         },
       },
     ]);
+    console.log(pastPaper);
     return res.status(200).json(pastPaper);
   } catch (error) {
     console.log(error);
