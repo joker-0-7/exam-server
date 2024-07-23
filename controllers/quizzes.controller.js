@@ -85,6 +85,7 @@ const updateQuestion = async (req, res) => {
       sources: JSON.parse(data.sources),
       question: data.question,
       answers: JSON.parse(data.answers),
+       pastPapers: JSON.parse(data.pastPapers),
       correct: data.correct,
       explanation: data.explanation,
       subjects: JSON.parse(data.subjects),
